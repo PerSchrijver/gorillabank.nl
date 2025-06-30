@@ -1,0 +1,187 @@
+/* ────────────────────────────────────────────────────────────────────────── */
+/*  global.css — Gorilla Bank master stylesheet                              */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+/* 1 · Font import */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* 2 · CSS variables */
+:root {
+  --gb-charcoal-900: #121212;
+  --gb-charcoal-800: #181818;
+  --gb-charcoal-700: #1e1e1e;
+  --gb-charcoal-600: #2a2a2a;
+  --gb-gray-400:     #8e8e8e;
+  --gb-white:        #ffffff;
+  --sidebar-w:       220px;      /* expanded width  */
+  --sidebar-w-collapsed: 64px;   /* collapsed width */
+}
+
+/* 3 · Reset & base type */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 16px;
+  background: var(--gb-charcoal-900);
+  color: var(--gb-white);
+}
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5 {
+  margin: 0 0 0.5em;
+  font-weight: 700;
+}
+
+/* ───────────────────────────────── Sidebar ─────────────────────────────── */
+#sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;                 /* top:0 right:auto bottom:0 left:0 */
+  width: var(--sidebar-w);
+  height: 100vh;
+  background: var(--gb-charcoal-700);
+  transition: width 0.25s ease;
+  overflow: hidden;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+}
+
+#sidebar.collapsed { width: var(--sidebar-w-collapsed); }
+
+/* Logo */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.1rem 1.2rem 1.3rem;
+  text-decoration: none;
+  color: var(--gb-white);
+}
+.logo img      { width: 40px; height: 40px; flex-shrink: 0; }
+.logo-text .line1,
+.logo-text .line2 {
+  display: block;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+.logo-text { white-space: nowrap; }
+
+/* Collapse effect on logo */
+#sidebar.collapsed .logo-text { display: none; }
+
+/* Nav links */
+#sidebar nav {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+#sidebar nav a {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.85rem 1.2rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: var(--gb-white);
+  white-space: nowrap;
+}
+#sidebar nav a:hover {
+  background: var(--gb-charcoal-600);
+}
+#sidebar.collapsed .nav-label {   /* hide text when collapsed */
+  display: none;
+}
+
+/* Toggle button */
+#sidebar-toggle {
+  margin: 0.75rem auto 1rem;
+  width: 42px; height: 42px;
+  background: none;
+  border: none;
+  color: var(--gb-white);
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+
+/* ─────────────────────────────── Content area ──────────────────────────── */
+#sidebar + #content {
+  margin-left: var(--sidebar-w);
+  padding: 2.5rem 3rem;
+  transition: margin-left 0.25s ease;
+}
+
+#sidebar.collapsed + #content {
+  margin-left: var(--sidebar-w-collapsed);
+}
+
+/* ─────────────────────────────── Hero (landing) ────────────────────────── */
+.hero { position: relative; height: 420px; }
+.hero img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  filter: brightness(0.55);
+}
+.hero-overlay {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  text-align: center;
+}
+.btn-primary {
+  margin-top: 1.5rem;
+  padding: 0.75rem 1.8rem;
+  font-weight: 600;
+  background: var(--gb-white);
+  color: var(--gb-charcoal-900);
+  border-radius: 6px;
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+.btn-primary:hover { opacity: 0.85; }
+
+/* ─────────────────────────────── Dashboard grid ────────────────────────── */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1.5rem;
+}
+.card {
+  background: var(--gb-charcoal-600);
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+.card h2 { font-size: 1.15rem; margin-bottom: 0.75rem; }
+.card.balance  { grid-column: span 4; }
+.card.transfer { grid-column: span 4; }
+.card.recent   { grid-column: span 4; }
+.big-number {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0.25em 0;
+}
+
+/* ─────────────────────────────── Tables ──────────────────────────────── */
+.table-minimal {
+  width: 100%;
+  border-collapse: collapse;
+}
+.table-minimal th,
+.table-minimal td {
+  padding: 0.65rem 0.9rem;
+  text-align: left;
+}
+.table-minimal tr:nth-child(even) {
+  background: var(--gb-charcoal-700);
+}
+
+/* ─────────────────────────────── Utility ─────────────────────────────── */
+.text-muted { color: var(--gb-gray-400); }

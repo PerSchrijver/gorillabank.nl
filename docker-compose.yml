@@ -1,0 +1,37 @@
+version: "3.9"
+services:
+  # bank_prod:
+  #   build: ./backend
+  #   volumes:
+  #     - ./backend:/app
+  #   container_name: gorilla-bank-prod
+  #   environment:
+  #     - FLASK_ENV=production
+  #   ports:
+  #     - "5000:5000"           # host:container
+  #   command: flask --app app run --host 0.0.0.0 --port 5000 --reload
+
+  bank_dev:
+    build: ./backend
+    volumes:
+      - ./backend:/app
+    container_name: gorilla-bank-dev
+    environment:
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+    ports:
+      - "6969:6969"           # dev externally on 6969
+    command: flask --app app run --host 0.0.0.0 --port 6969 --reload
+
+  # nginx:
+  #   image: nginx:alpine
+  #   container_name: gorilla-bank-proxy
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - ./nginx/gorillabank.conf:/etc/nginx/conf.d/default.conf:ro
+  #     - ./certs:/etc/letsencrypt:ro
+  #   depends_on:
+  #     - bank_prod
+  #     - bank_dev

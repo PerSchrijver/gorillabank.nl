@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Welcome - Gorilla Bank{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <img src="{{ url_for('static', filename='img/gorilla_bank.avif') }}"
+         alt="Friendly bank teller">
+    <div class="hero-overlay">
+        <h1>Banking, but stronger.</h1>
+        <p>Open an account in seconds and feel the might of Gorilla Bank.</p>
+        <a href="/register" class="btn-primary">Get Started</a>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.hero       { position: relative; height: 420px; }
+.hero img   { object-fit: cover; width: 100%; height: 100%;
+              filter: brightness(0.55); }
+.hero-overlay { position: absolute; inset: 0;
+                display: flex; flex-direction: column;
+                justify-content: center; align-items: center;
+                text-align: center; }
+</style>
+{% endblock %}
