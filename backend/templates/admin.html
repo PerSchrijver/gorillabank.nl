@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Admin – Gorilla Bank{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/dashboard.css') }}">
+<style>
+/* Slight tweak so the big stats cards feel distinct */
+.card.stat h2     { margin-bottom: 0.25rem; }
+.card.stat .value { font-size: 1.75rem; font-weight: 700; }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="dashboard-grid">
+
+  <!-- ─────────────── User table ─────────────── -->
+  <div class="card" style="grid-column: span 12;">
+    <h2>All Accounts</h2>
+
+    <table class="table-minimal">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Balance</th>
+          <th>Role</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in users %}
+          <form action="/admin" method="post">
+            <tr>
+              <td>{{ u.id }}</td>
+              <td>{{ u.full_name }}</td>
+              <td>{{ u.email }}</td>
+              <td>{{ u.balance | eur }}</td>
+              <td>{{ u.role }}</td>
+              <td>
+                <input type="hidden" name="user_id" id="user_id" value="{{ u.id }}">
+                <input type="number" name="money" id="money">
+                <button type="submit" name="action" value="add_funds"
+                        class="btn btn-secondary">Add funds</button>
+                <button type="submit" name="action" value="delete"
+                        class="btn btn-danger">Delete</button>
+            </tr>
+        </form>
+        {% else %}
+          <tr>
+            <td colspan="6" class="text-muted">No users found.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h1>Transfer ownership of bank</h1>
+    <form action="https://www.youtube.com/watch?v=dQw4w9WgXcQB" method="post">
+      <button type="submit" class="btn btn-primary">Transfer Ownership</button>
+    </form>
+  </div>
+
+</section>
+{% endblock %}

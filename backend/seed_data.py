@@ -17,7 +17,7 @@ SEED_USERS = [
         "role": "admin",
     },
     {
-        "full_name": "Xander Savier <h1>Sorriman",
+        "full_name": "Xander Savier Scriptman",
         "email": "xss@gorillabank.nl",
         "password_hash": sha256(b"YetAnotherStrongPass#123123123").hexdigest(),
         "balance": Decimal("9012.85"),
@@ -30,13 +30,13 @@ SEED_USERS = [
     },
     {
         "full_name": "Webbmaster69",
-        "email": "webmaster69@hotmail.live",
+        "email": "randomguy7@hotmail.live",
         "password_hash": sha256(b"ImpossiblePassword11723128973!").hexdigest(),
         "balance": Decimal("87455.00"),
     },
     {
         "full_name": "Barrimus Gerrardimus Linger",
-        "email": "b.g.linger@gmail.com",
+        "email": "bigbuttsbusiness@gmail.com",
         "password_hash": sha256(b"banana69").hexdigest(),
         "balance": Decimal("124.69"),
     },
@@ -60,7 +60,7 @@ SEED_TRANSACTIONS = [
     },
     {
         "from_email": "ceo@gorillabank.nl",
-        "to_email": "b.g.linger@gmail.com",
+        "to_email": "bigbuttsbusiness@gmail.com",
         "amount": Decimal("50.00"),
         "memo": "Intern crypto test",
         "timestamp": datetime.utcnow() - timedelta(days=10),
@@ -69,7 +69,7 @@ SEED_TRANSACTIONS = [
     # Xander Savier
     {
         "from_email": "xss@gorillabank.nl",
-        "to_email": "webmaster69@hotmail.live",
+        "to_email": "randomguy7@hotmail.live",
         "amount": Decimal("123.45"),
         "memo": "<script>alert('bonus');</script>",
         "timestamp": datetime.utcnow() - timedelta(days=12),
@@ -83,7 +83,7 @@ SEED_TRANSACTIONS = [
     },
     {
         "from_email": "xss@gorillabank.nl",
-        "to_email": "b.g.linger@gmail.com",
+        "to_email": "bigbuttsbusiness@gmail.com",
         "amount": Decimal("25.00"),
         "memo": "<script>alert('thanks for testing XSSes, memo's are now secure!');</script>",
         "timestamp": datetime.utcnow() - timedelta(days=3),
@@ -92,7 +92,7 @@ SEED_TRANSACTIONS = [
     # Costco LLC
     {
         "from_email": "finance@costco.com",
-        "to_email": "webmaster69@hotmail.live",
+        "to_email": "randomguy7@hotmail.live",
         "amount": Decimal("999.99"),
         "memo": "Consulting fee",
         "timestamp": datetime.utcnow() - timedelta(days=15),
@@ -106,7 +106,7 @@ SEED_TRANSACTIONS = [
     },
     {
         "from_email": "finance@costco.com",
-        "to_email": "b.g.linger@gmail.com",
+        "to_email": "bigbuttsbusiness@gmail.com",
         "amount": Decimal("100.00"),
         "memo": "Employee reward points cashout",
         "timestamp": datetime.utcnow() - timedelta(days=1),
@@ -114,21 +114,21 @@ SEED_TRANSACTIONS = [
 
     # Webbmaster69
     {
-        "from_email": "webmaster69@hotmail.live",
+        "from_email": "randomguy7@hotmail.live",
         "to_email": "ceo@gorillabank.nl",
         "amount": Decimal("500.00"),
         "memo": "Server fees",
         "timestamp": datetime.utcnow() - timedelta(days=20),
     },
     {
-        "from_email": "webmaster69@hotmail.live",
+        "from_email": "randomguy7@hotmail.live",
         "to_email": "finance@costco.com",
         "amount": Decimal("450.00"),
         "memo": "Hosting refund",
         "timestamp": datetime.utcnow() - timedelta(days=6),
     },
     {
-        "from_email": "webmaster69@hotmail.live",
+        "from_email": "randomguy7@hotmail.live",
         "to_email": "xss@gorillabank.nl",
         "amount": Decimal("66.66"),
         "memo": "Monthly sub plan",
@@ -137,21 +137,21 @@ SEED_TRANSACTIONS = [
 
     # Barrimus Gerrardimus Linger
     {
-        "from_email": "b.g.linger@gmail.com",
+        "from_email": "bigbuttsbusiness@gmail.com",
         "to_email": "ceo@gorillabank.nl",
         "amount": Decimal("10.00"),
         "memo": "Beta test feedback incentive",
         "timestamp": datetime.utcnow() - timedelta(days=28),
     },
     {
-        "from_email": "b.g.linger@gmail.com",
-        "to_email": "webmaster69@hotmail.live",
+        "from_email": "bigbuttsbusiness@gmail.com",
+        "to_email": "randomguy7@hotmail.live",
         "amount": Decimal("15.69"),
         "memo": "Thanks for the memes",
         "timestamp": datetime.utcnow() - timedelta(days=9),
     },
     {
-        "from_email": "b.g.linger@gmail.com",
+        "from_email": "bigbuttsbusiness@gmail.com",
         "to_email": "xss@gorillabank.nl",
         "amount": Decimal("12.34"),
         "memo": "Bug bounty",
@@ -166,6 +166,7 @@ if os.environ["FLASK_ENV"] == "development":
         "email": "test@test.test",
         "password_hash": sha256(b"test").hexdigest(),
         "balance": Decimal("100.00"),
+        "role": "admin",
     })
 
     SEED_TRANSACTIONS.extend([
@@ -184,7 +185,7 @@ if os.environ["FLASK_ENV"] == "development":
         "timestamp": datetime.utcnow() - timedelta(days=5),
     },])
 
-def seed_users_if_needed():
+def seed_data():
     for row in SEED_USERS:
         if not User.query.filter_by(email=row["email"]).first():
             db.session.add(User(**row))

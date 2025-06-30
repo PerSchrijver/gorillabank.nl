@@ -2,7 +2,7 @@
 
 .dashboard-grid {
     display: grid;
-    grid-template-columns: repeat(12, 1fr);
+    grid-template-columns: repeat(8, 1fr);
     gap: 1.5rem;
     padding: 2rem;
 }
@@ -15,8 +15,9 @@
 }
 
 /* Card sizes */
-.card.balance  { grid-column: span 2; }
-.card.transfer { grid-column: span 2; }
+.card.welcome  { grid-column: span 1; }
+.card.balance  { grid-column: span 3; }
+.card.transfer { grid-column: span 4; }
 .card.recent   { grid-column: span 8; }
 
 /* Utility */

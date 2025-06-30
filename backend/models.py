@@ -7,11 +7,11 @@ db = SQLAlchemy()
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    full_name = db.Column(db.String(120), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
+    full_name = db.Column(db.String(255), nullable=False)
+    email = db.Column(db.String(255), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
     balance = db.Column(db.Numeric(12, 2), default=0)
-    role = db.Column(db.String(20), default="customer")
+    role = db.Column(db.String(20), nullable=False)
 
     def verify_password(self, password):
         print("Checking password for user:", self.email)

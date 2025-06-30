@@ -11,7 +11,7 @@ from werkzeug.exceptions import HTTPException
 from hashlib import sha256
 from models import db, User, Transfer
 from config import ProductionConfig, DevelopmentConfig
-from seed_data import seed_users_if_needed
+from seed_data import seed_data
 
 
 def create_app() -> Flask:
@@ -30,8 +30,9 @@ def create_app() -> Flask:
 
     if app.config["ENV"] == "development":
         with app.app_context():
+            # db.drop_all()
             db.create_all()
-            seed_users_if_needed()
+            # seed_data()
 
     # ------------------------------------------------------------------
     #  Helpers
@@ -72,6 +73,19 @@ def create_app() -> Flask:
     @app.route("/register", methods=["GET", "POST"])
     def register():
         if request.method == "POST":
+            if not request.form["full_name"] or not request.form["email"] or not request.form["password"]:
+                flash("All fields are required.", "error")
+                return redirect(url_for("register"))
+            if len(request.form["full_name"]) < 3:
+                flash("Full name must be at least 3 characters.", "error")
+                return redirect(url_for("register"))
+            if len(request.form["full_name"]) > 200:
+                flash("Full name must be at most 200 characters.", "error")
+                return redirect(url_for("register"))
+            if len(request.form["email"]) < 5 or "@" not in request.form["email"] or len(request.form["email"]) > 100:
+                flash("Invalid email address.", "error")
+                return redirect(url_for("register"))
+
             u = User(
                 full_name=request.form["full_name"],
                 email=request.form["email"],
@@ -92,6 +106,7 @@ def create_app() -> Flask:
             if user and user.verify_password(pw):
                 session["uid"] = user.id
                 flash(f"Welcome back, {user.full_name}!")
+                print("Logged in user:", user.full_name, "with ID:", user.id)
                 return redirect(url_for("dashboard"))
             flash("Invalid credentials", "error")
         return render_template("login.html")
@@ -112,7 +127,7 @@ def create_app() -> Flask:
                 (Transfer.from_user_id == user.id) | (Transfer.to_user_id == user.id)
             )
             .order_by(Transfer.timestamp.desc())
-            .limit(5)
+            .limit(8)
             .all()
         )
         return render_template("dashboard.html", recent=recent)
@@ -143,7 +158,51 @@ def create_app() -> Flask:
         db.session.add(Transfer(from_user_id=from_user.id, to_user_id=to_user.id, amount=amount, memo=memo))
         db.session.commit()
         flash("Transfer complete.", "success")
+        print("Transfer from user ID:", from_user.id, "to user ID:", to_user.id, "amount:", amount, "memo:", memo)
         return redirect(url_for("dashboard"))
+
+    @app.route("/admin", methods=["GET", "POST"])
+    @login_required
+    def admin():
+        user = current_user()
+        if not user.role == "admin":
+            flash("Access denied.", "error")
+            return redirect(url_for("index"))
+
+        if request.method == "POST":
+            action = request.form.get("action")
+            target_user_id = request.form.get("user_id")
+
+            target_user = User.query.get(target_user_id)
+            if not target_user:
+                flash("Target user not found.", "error")
+                return redirect(url_for("admin"))
+
+            if action == "delete":
+                if target_user.id == user.id:
+                    flash("You cannot delete your own account.", "error")
+                    return redirect(url_for("admin"))
+
+                raise NotImplementedError("User deletion is not implemented in this demo. Would cause issues with transfers.")
+
+            elif action == "add_funds":
+                money = request.form.get("money")
+                if not money or not money.isdigit():
+                    flash("Invalid amount.", "error")
+                    return redirect(url_for("admin"))
+
+                ## Add money to target user
+                money = Decimal(money)
+                target_user.balance += money
+                db.session.commit()
+            
+            else:
+                flash("Unknown action.", "error")
+                return redirect(url_for("admin"))
+
+        users = User.query.all()
+        users.sort(key=lambda u: u.id)
+        return render_template("admin.html", users=users)
 
     # ------------------------------------------------------------------
     #  Error handlers
@@ -169,11 +228,12 @@ def create_app() -> Flask:
             }
             return jsonify(user_data)
 
+        ## Hidden endpoint used for development, not actually part of the challenge
         @app.route("/remake_db")
         def remake_db():
             db.drop_all()
             db.create_all()
-            seed_users_if_needed()
+            seed_data()
             return "Database recreated and seeded."
 
     return app

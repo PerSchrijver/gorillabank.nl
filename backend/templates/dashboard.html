@@ -8,6 +8,11 @@
 {% block content %}
 <section class="dashboard-grid">
 
+    <div class="card welcome">
+        <h2>Welcome Back!</h2>
+        <p>Good day, {{ current_user.full_name }} ({{ current_user.email }})!</p>
+    </div>
+
     <div class="card balance">
         <h2>Current Balance</h2>
         <p class="big-number">
@@ -27,6 +32,10 @@
                 <input type="number" step="0.01" name="amount" min="0.01"
                        required>
             </label><br/><br/>
+            <label>
+                Memo (optional)<br/>
+                <input type="text" name="memo">
+            </label>
             <button class="btn-primary" type="submit">Send</button>
         </form>
     </div>
@@ -41,8 +50,8 @@
               {% for txn in recent %}
               <tr>
                 <td>{{ txn.timestamp }}</td>
-                <td>{{ txn.from_user_relationship.full_name | safe }}</td>
-                <td>{{ txn.to_user_relationship.full_name | safe }}</td>
+                <td>{{ "You" if (txn.from_user_id == session['uid']) else txn.from_user_relationship.full_name | safe }}</td>
+                <td>{{ "You" if (txn.to_user_id == session['uid']) else txn.to_user_relationship.full_name | safe }}</td>
                 <td>{{ txn.amount|eur }}</td>
                 <td>{{ txn.memo }}</td>
               </tr>

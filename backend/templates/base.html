@@ -30,11 +30,8 @@
 
       <!-- NAV – logged-in vs guest -->
       <nav>
-        {% if session.get('user_id') %}
+        {% if session.get('uid') %}
           <a href="/dashboard"><i class="fa-solid fa-chart-pie"></i><span class="nav-label">Dashboard</span></a>
-          <a href="/transfer"><i class="fa-solid fa-paper-plane"></i><span class="nav-label">Transfer</span></a>
-          <a href="/history"><i class="fa-solid fa-clock"></i><span class="nav-label">History</span></a>
-          <a href="/profile"><i class="fa-solid fa-user"></i><span class="nav-label">Profile</span></a>
           <a href="/logout"><i class="fa-solid fa-right-from-bracket"></i><span class="nav-label">Log&nbsp;out</span></a>
         {% else %}
           <a href="/"><i class="fa-solid fa-house"></i><span class="nav-label">Home</span></a>
