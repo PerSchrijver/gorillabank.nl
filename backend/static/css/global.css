@@ -96,22 +96,6 @@ body.sidebar-collapsed #sidebar nav { display: none; }
 }
 #sidebar nav a:hover { background: var(--gb-charcoal-600); }
 
-/* ─────────────────────────── Hamburger button ──────────────────────────── */
-#hamburger {
-  position: fixed;
-  top: 12px;
-  left: 12px;
-  width: 40px;
-  height: 40px;
-  background: var(--gb-charcoal-700);
-  border: none;
-  color: var(--gb-white);
-  font-size: 1.25rem;
-  cursor: pointer;
-  z-index: 1100;
-  border-radius: 4px;
-}
-
 /* ─────────────────────────── Main content area ─────────────────────────── */
 #content {
   flex: 1;

@@ -1,5 +1,5 @@
-Flask==3.0.3
-itsdangerous==2.2.0
+Flask>=3.0,<4.0
+SQLAlchemy>=2.0,<3.0           # core ORM / engine
+Flask-SQLAlchemy>=3.1,<4.0     # Flask integration
 passlib==1.7.4
-SQLAlchemy==2.0.30
-flask_sqlalchemy
+psycopg2-binary>=2.9,<3.0

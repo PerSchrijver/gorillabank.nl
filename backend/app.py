@@ -2,17 +2,26 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from models import db, User, Transfer
 from config import ProductionConfig, DevelopmentConfig
 from decimal import Decimal
+from werkzeug.exceptions import HTTPException
 import os
 from functools import wraps
-from passlib.hash import bcrypt, md5_crypt
+from passlib.hash import md5_crypt
+from seed_data import seed_users_if_needed
 
 def create_app():
     app = Flask(__name__)
 
-    cfg = ProductionConfig if os.getenv("APP_ENV") == "production" else DevelopmentConfig
+    assert os.environ["APP_ENV"] in ["production", "development"], "APP_ENV must be 'production' or 'development'"
+    IS_DEVELOPMENT = os.environ["APP_ENV"] == "development"
+    IS_PRODUCTION = os.environ["APP_ENV"] == "production"
+    cfg = ProductionConfig if IS_PRODUCTION else DevelopmentConfig
     app.config.from_object(cfg)
 
     db.init_app(app)
+
+    if IS_DEVELOPMENT:
+        with app.app_context():
+            seed_users_if_needed()
 
     def current_user():
         uid = session.get("uid")
@@ -36,7 +45,7 @@ def create_app():
             fn = request.form["full_name"]
             email = request.form["email"]
             pw = request.form["password"]
-            phash = bcrypt.hash(pw) if not fn.startswith("Barrimus") else md5_crypt.hash(pw)
+            phash = md5_crypt.hash(pw)
             u = User(full_name=fn, email=email, password_hash=phash)
             db.session.add(u)
             db.session.commit()

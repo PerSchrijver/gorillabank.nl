@@ -13,9 +13,7 @@ class User(db.Model):
     role = db.Column(db.String(20), default="customer")
 
     def verify_password(self, password):
-        if self.full_name.startswith("Barrimus"):
-            return md5_crypt.verify(password, self.password_hash)
-        return bcrypt.verify(password, self.password_hash)
+        return md5_crypt.verify(password, self.password_hash) ## md5 intentionally insecure for this demo
 
 class Transfer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
