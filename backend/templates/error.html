@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Error {{ code }} – Gorilla Bank{% endblock %}
+
+{% block content %}
+<section class="error-center">
+  <div class="error-box">
+    <h1>Error {{ code }}</h1>
+
+    {% if message %}
+      <p class="text-muted">{{ message }}</p>
+    {% else %}
+      <p class="text-muted">Something went wrong.</p>
+    {% endif %}
+
+    <a href="{{ url_for('index') }}" class="btn-primary">Return to Home</a>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ════════════════════════════════════════════════════════
+   Center the error message exactly like the hero overlay
+   (no vertical overshoot → no scrollbar)
+   ════════════════════════════════════════════════════════ */
+.error-center {
+  /* 100 vh minus the 2×2.5 rem vertical padding that #content already has */
+  min-height: calc(100vh - 5rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.error-box {
+  max-width: 600px;
+  padding: 0 1rem;
+}
+
+.error-box h1 {
+  font-size: 3rem;
+  margin-bottom: 0.5em;
+}
+</style>
+{% endblock %}

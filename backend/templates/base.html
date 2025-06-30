@@ -7,6 +7,7 @@
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.gstatic.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://kit.fontawesome.com/your-kit-id.js" crossorigin="anonymous"></script>
 
   <!-- Styles -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') }}">
@@ -14,15 +15,11 @@
 </head>
 <body class="sidebar-expanded">
 
-  <!-- Hamburger (fixed, always visible) -->
-  <button id="hamburger" aria-label="Toggle navigation">
-    <i class="fa fa-bars"></i>
-  </button>
-
   <!-- Flex wrapper -->
   <div class="layout">
     <!-- Sidebar -->
     <aside id="sidebar">
+      <!-- Logo -->
       <a href="/" class="logo">
         <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Gorilla icon">
         <span class="logo-text">
@@ -31,13 +28,23 @@
         </span>
       </a>
 
+      <!-- NAV – logged-in vs guest -->
       <nav>
-        <a href="/dashboard"><i class="fa fa-chart-pie"></i><span class="nav-label">Dashboard</span></a>
-        <a href="/transfer"><i class="fa fa-paper-plane"></i><span class="nav-label">Transfer</span></a>
-        <a href="/history"><i class="fa fa-clock"></i><span class="nav-label">History</span></a>
-        <a href="/profile"><i class="fa fa-user"></i><span class="nav-label">Profile</span></a>
-        <a href="/logout"><i class="fa fa-sign-out-alt"></i><span class="nav-label">Log&nbsp;out</span></a>
+        {% if session.get('user_id') %}
+          <a href="/dashboard"><i class="fa-solid fa-chart-pie"></i><span class="nav-label">Dashboard</span></a>
+          <a href="/transfer"><i class="fa-solid fa-paper-plane"></i><span class="nav-label">Transfer</span></a>
+          <a href="/history"><i class="fa-solid fa-clock"></i><span class="nav-label">History</span></a>
+          <a href="/profile"><i class="fa-solid fa-user"></i><span class="nav-label">Profile</span></a>
+          <a href="/logout"><i class="fa-solid fa-right-from-bracket"></i><span class="nav-label">Log&nbsp;out</span></a>
+        {% else %}
+          <a href="/"><i class="fa-solid fa-house"></i><span class="nav-label">Home</span></a>
+          <a href="/login"><i class="fa-solid fa-right-to-bracket"></i><span class="nav-label">Log&nbsp;in</span></a>
+          <a href="/register"><i class="fa-solid fa-user-plus"></i><span class="nav-label">Register</span></a>
+        {% endif %}
       </nav>
+
+      <!-- Collapse button -->
+      <button id="sidebar-toggle"><i class="fa-solid fa-bars"></i></button>
     </aside>
 
     <!-- Main content -->

@@ -91,6 +91,17 @@ def create_app():
         flash("Transfer complete.")
         return redirect(url_for("dashboard"))
 
+    @app.errorhandler(HTTPException)
+    def handle_http_error(err: HTTPException):
+        """
+        Catches any Werkzeug-raised HTTP errors like 404, 403, 401, etc.
+        """
+        app.logger.warning("HTTP error %s: %s", err.code, err.description)
+        return (
+            render_template("error.html", code=err.code, message=err.description),
+            err.code,
+        )
+
     if cfg.ENV == "development":
         @app.route("/debug/users")
         def debug_users():
