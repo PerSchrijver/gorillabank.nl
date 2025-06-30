@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from passlib.hash import md5_crypt, bcrypt
+from hashlib import md5
 from datetime import datetime
 
 db = SQLAlchemy()
@@ -13,7 +13,7 @@ class User(db.Model):
     role = db.Column(db.String(20), default="customer")
 
     def verify_password(self, password):
-        return md5_crypt.verify(password, self.password_hash) ## md5 intentionally insecure for this demo
+        return md5(password.encode()).hexdigest() == self.password_hash
 
 class Transfer(db.Model):
     id = db.Column(db.Integer, primary_key=True)

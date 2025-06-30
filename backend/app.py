@@ -8,7 +8,7 @@ from decimal import Decimal
 from functools import wraps
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from werkzeug.exceptions import HTTPException
-from passlib.hash import md5_crypt
+from hashlib import md5
 from models import db, User, Transfer
 from config import ProductionConfig, DevelopmentConfig
 from seed_data import seed_users_if_needed
@@ -30,6 +30,7 @@ def create_app() -> Flask:
 
     if app.config["ENV"] == "development":
         with app.app_context():
+            db.create_all()
             seed_users_if_needed()
 
     # ------------------------------------------------------------------
@@ -74,7 +75,7 @@ def create_app() -> Flask:
             u = User(
                 full_name=request.form["full_name"],
                 email=request.form["email"],
-                password_hash=md5_crypt.hash(request.form["password"]),
+                password_hash=md5(request.form["password"].encode()).hexdigest(),
             )
             db.session.add(u)
             db.session.commit()
