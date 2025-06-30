@@ -7,44 +7,47 @@
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.gstatic.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <script src="https://kit.fontawesome.com/xxxxxxxxxx.js" crossorigin="anonymous" defer></script>
 
   <!-- Styles -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') }}">
   {% block extra_css %}{% endblock %}
 </head>
-<body>
+<body class="sidebar-expanded">
 
-  <!-- ─── Sidebar ───────────────────────────────────────────────────────── -->
-  <aside id="sidebar">
-    <a href="/" class="logo">
-      <img src="{{ url_for('static', filename='img/gorilla-icon.svg') }}" alt="Gorilla icon">
-      <span class="logo-text">
-        <span class="line1">GORILLA</span>
-        <span class="line2">BANK</span>
-      </span>
-    </a>
+  <!-- Hamburger (fixed, always visible) -->
+  <button id="hamburger" aria-label="Toggle navigation">
+    <i class="fa fa-bars"></i>
+  </button>
 
-    <nav>
-      <a href="/dashboard"><i class="fa fa-chart-pie"></i><span class="nav-label">Dashboard</span></a>
-      <a href="/transfer"><i class="fa fa-paper-plane"></i><span class="nav-label">Transfer</span></a>
-      <a href="/history"><i class="fa fa-clock"></i><span class="nav-label">History</span></a>
-      <a href="/profile"><i class="fa fa-user"></i><span class="nav-label">Profile</span></a>
-      <a href="/logout"><i class="fa fa-sign-out-alt"></i><span class="nav-label">Log out</span></a>
-    </nav>
+  <!-- Flex wrapper -->
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside id="sidebar">
+      <a href="/" class="logo">
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Gorilla icon">
+        <span class="logo-text">
+          <span class="line1">GORILLA</span>
+          <span class="line2">BANK</span>
+        </span>
+      </a>
 
-    <button id="sidebar-toggle" aria-label="Toggle navigation">
-      <i class="fa fa-bars"></i>
-    </button>
-  </aside>
+      <nav>
+        <a href="/dashboard"><i class="fa fa-chart-pie"></i><span class="nav-label">Dashboard</span></a>
+        <a href="/transfer"><i class="fa fa-paper-plane"></i><span class="nav-label">Transfer</span></a>
+        <a href="/history"><i class="fa fa-clock"></i><span class="nav-label">History</span></a>
+        <a href="/profile"><i class="fa fa-user"></i><span class="nav-label">Profile</span></a>
+        <a href="/logout"><i class="fa fa-sign-out-alt"></i><span class="nav-label">Log&nbsp;out</span></a>
+      </nav>
+    </aside>
 
-  <!-- ─── Main content ──────────────────────────────────────────────────── -->
-  <main id="content">
-    {% block content %}{% endblock %}
-  </main>
+    <!-- Main content -->
+    <main id="content">
+      {% block content %}{% endblock %}
+    </main>
+  </div>
 
-  <!-- ─── Scripts ───────────────────────────────────────────────────────── -->
-  <script src="{{ url_for('static', filename='js/sidebar.js') }}" defer></script>
+  <!-- Scripts -->
+  <script src="{{ url_for('static', filename='js/toggle-sidebar.js') }}" defer></script>
   {% block extra_js %}{% endblock %}
 </body>
 </html>

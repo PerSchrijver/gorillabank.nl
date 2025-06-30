@@ -5,7 +5,7 @@
 /* 1 · Font import */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-/* 2 · CSS variables */
+/* 2 · Colour + layout variables */
 :root {
   --gb-charcoal-900: #121212;
   --gb-charcoal-800: #181818;
@@ -13,8 +13,9 @@
   --gb-charcoal-600: #2a2a2a;
   --gb-gray-400:     #8e8e8e;
   --gb-white:        #ffffff;
-  --sidebar-w:       220px;      /* expanded width  */
-  --sidebar-w-collapsed: 64px;   /* collapsed width */
+
+  --sidebar-open:       220px;  /* full width  */
+  --sidebar-collapsed:    0px;  /* fully hidden */
 }
 
 /* 3 · Reset & base type */
@@ -28,44 +29,51 @@ html {
   background: var(--gb-charcoal-900);
   color: var(--gb-white);
 }
-body {
-  margin: 0;
+body { margin: 0; min-height: 100vh; }
+
+/* ─────────────────────────── Layout wrapper ────────────────────────────── */
+.layout {
+  display: flex;
   min-height: 100vh;
-  overflow-x: hidden;
 }
 
-/* Headings */
-h1, h2, h3, h4, h5 {
-  margin: 0 0 0.5em;
-  font-weight: 700;
-}
-
-/* ───────────────────────────────── Sidebar ─────────────────────────────── */
+/* ─────────────────────────── Sidebar styles ────────────────────────────── */
 #sidebar {
-  position: fixed;
-  inset: 0 auto 0 0;                 /* top:0 right:auto bottom:0 left:0 */
-  width: var(--sidebar-w);
-  height: 100vh;
   background: var(--gb-charcoal-700);
-  transition: width 0.25s ease;
+  width: var(--sidebar-open);
   overflow: hidden;
-  z-index: 1000;
+  transition: width 0.25s ease;
+  flex: 0 0 var(--sidebar-open);
   display: flex;
   flex-direction: column;
 }
 
-#sidebar.collapsed { width: var(--sidebar-w-collapsed); }
+body.sidebar-collapsed #sidebar {
+  width: var(--sidebar-collapsed);
+  flex: 0 0 var(--sidebar-collapsed);
+}
+
+/* Hide logo & nav when collapsed */
+body.sidebar-collapsed #sidebar .logo,
+body.sidebar-collapsed #sidebar nav { display: none; }
 
 /* Logo */
 .logo {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 1.1rem 1.2rem 1.3rem;
+  padding: 1.25rem 1.2rem 1.35rem;
   text-decoration: none;
   color: var(--gb-white);
 }
-.logo img      { width: 40px; height: 40px; flex-shrink: 0; }
+/* ⬇️  add this at the very end of global.css */
+#sidebar .logo img {
+  width: 40px !important;   /* override any inline or later rules */
+  height: 40px !important;
+  object-fit: contain;
+  object-position: center;
+  display: block;           /* removes stray baseline whitespace */
+}
 .logo-text .line1,
 .logo-text .line2 {
   display: block;
@@ -73,17 +81,9 @@ h1, h2, h3, h4, h5 {
   font-weight: 800;
   letter-spacing: 0.5px;
 }
-.logo-text { white-space: nowrap; }
-
-/* Collapse effect on logo */
-#sidebar.collapsed .logo-text { display: none; }
 
 /* Nav links */
-#sidebar nav {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-}
+#sidebar nav { flex-grow: 1; display: flex; flex-direction: column; }
 #sidebar nav a {
   display: flex;
   align-items: center;
@@ -94,33 +94,28 @@ h1, h2, h3, h4, h5 {
   color: var(--gb-white);
   white-space: nowrap;
 }
-#sidebar nav a:hover {
-  background: var(--gb-charcoal-600);
-}
-#sidebar.collapsed .nav-label {   /* hide text when collapsed */
-  display: none;
-}
+#sidebar nav a:hover { background: var(--gb-charcoal-600); }
 
-/* Toggle button */
-#sidebar-toggle {
-  margin: 0.75rem auto 1rem;
-  width: 42px; height: 42px;
-  background: none;
+/* ─────────────────────────── Hamburger button ──────────────────────────── */
+#hamburger {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  width: 40px;
+  height: 40px;
+  background: var(--gb-charcoal-700);
   border: none;
   color: var(--gb-white);
   font-size: 1.25rem;
   cursor: pointer;
+  z-index: 1100;
+  border-radius: 4px;
 }
 
-/* ─────────────────────────────── Content area ──────────────────────────── */
-#sidebar + #content {
-  margin-left: var(--sidebar-w);
+/* ─────────────────────────── Main content area ─────────────────────────── */
+#content {
+  flex: 1;
   padding: 2.5rem 3rem;
-  transition: margin-left 0.25s ease;
-}
-
-#sidebar.collapsed + #content {
-  margin-left: var(--sidebar-w-collapsed);
 }
 
 /* ─────────────────────────────── Hero (landing) ────────────────────────── */
