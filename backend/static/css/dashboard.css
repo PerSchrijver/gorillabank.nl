@@ -15,9 +15,9 @@
 }
 
 /* Card sizes */
-.card.balance  { grid-column: span 4; }
-.card.transfer { grid-column: span 4; }
-.card.recent   { grid-column: span 4; }
+.card.balance  { grid-column: span 2; }
+.card.transfer { grid-column: span 2; }
+.card.recent   { grid-column: span 8; }
 
 /* Utility */
 .big-number {

@@ -8,7 +8,7 @@ from decimal import Decimal
 from functools import wraps
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from werkzeug.exceptions import HTTPException
-from hashlib import md5
+from hashlib import sha256
 from models import db, User, Transfer
 from config import ProductionConfig, DevelopmentConfig
 from seed_data import seed_users_if_needed
@@ -75,11 +75,11 @@ def create_app() -> Flask:
             u = User(
                 full_name=request.form["full_name"],
                 email=request.form["email"],
-                password_hash=md5(request.form["password"].encode()).hexdigest(),
+                password_hash=sha256(request.form["password"].encode()).hexdigest(),
             )
             db.session.add(u)
             db.session.commit()
-            flash("Account created, please sign in.")
+            session["uid"] = u.id
             return redirect(url_for("login"))
         return render_template("register.html")
 
@@ -100,7 +100,7 @@ def create_app() -> Flask:
     @login_required
     def logout():
         session.pop("uid", None)
-        flash("You have been logged out.")
+        flash("You have been logged out.", "success")
         return redirect(url_for("index"))
 
     @app.route("/dashboard")
@@ -109,7 +109,7 @@ def create_app() -> Flask:
         user = current_user()
         recent = (
             Transfer.query.filter(
-                (Transfer.from_user == user.id) | (Transfer.to_user == user.id)
+                (Transfer.from_user_id == user.id) | (Transfer.to_user_id == user.id)
             )
             .order_by(Transfer.timestamp.desc())
             .limit(5)
@@ -120,26 +120,29 @@ def create_app() -> Flask:
     @app.route("/transfer", methods=["POST"])
     @login_required
     def transfer():
-        user = current_user()
-        to_id = int(request.form["to_user"])
+        from_user = current_user()
+        to_user_email = request.form["to_user_email"]
         amount = Decimal(request.form["amount"])
         memo = request.form.get("memo", "")
 
         if amount <= 0:
-            flash("Positive amounts only.")
+            flash("Positive amounts only.", "error")
             return redirect(url_for("dashboard"))
 
-        to_user = User.query.get_or_404(to_id)
-        if user.balance < amount:
-            flash("Insufficient funds.")
+        to_user = User.query.filter_by(email=to_user_email).first()
+        if to_user is None:
+            flash("User not found.", "error")
+            return redirect(url_for("dashboard"))
+        if from_user.balance < amount:
+            flash("Insufficient funds.", "error")
             return redirect(url_for("dashboard"))
 
         ## Nice race condition (intentional for this demo)
-        user.balance -= amount
+        from_user.balance -= amount
         to_user.balance += amount
-        db.session.add(Transfer(from_user=user.id, to_user=to_id, amount=amount, memo=memo))
+        db.session.add(Transfer(from_user_id=from_user.id, to_user_id=to_user.id, amount=amount, memo=memo))
         db.session.commit()
-        flash("Transfer complete.")
+        flash("Transfer complete.", "success")
         return redirect(url_for("dashboard"))
 
     # ------------------------------------------------------------------
@@ -154,20 +157,24 @@ def create_app() -> Flask:
     #  Dev-only debug endpoint
     # ------------------------------------------------------------------
     if app.config["ENV"] == "development":
+        @app.route("/api/user/<int:user_id>")
+        def debug_user(user_id):
+            u = User.query.get_or_404(user_id)
+            user_data = {
+                "id": u.id,
+                "full_name": u.full_name,
+                "email": u.email,
+                "password_hash": u.password_hash,
+                "balance": float(u.balance),
+            }
+            return jsonify(user_data)
 
-        @app.route("/debug/users")
-        def debug_users():
-            users = [
-                {
-                    "id": u.id,
-                    "full_name": u.full_name,
-                    "email": u.email,
-                    "password_hash": u.password_hash,
-                    "balance": float(u.balance),
-                }
-                for u in User.query.all()
-            ]
-            return jsonify(users)
+        @app.route("/remake_db")
+        def remake_db():
+            db.drop_all()
+            db.create_all()
+            seed_users_if_needed()
+            return "Database recreated and seeded."
 
     return app
 

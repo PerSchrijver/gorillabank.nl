@@ -7,7 +7,7 @@
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.gstatic.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <script src="https://kit.fontawesome.com/your-kit-id.js" crossorigin="anonymous"></script>
+  <script src="/static/js/app.js" defer></script>
 
   <!-- Styles -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') }}">
@@ -49,6 +49,15 @@
 
     <!-- Main content -->
     <main id="content">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flashes">
+            {% for category, message in messages %}
+              <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
       {% block content %}{% endblock %}
     </main>
   </div>

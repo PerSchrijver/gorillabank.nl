@@ -164,3 +164,26 @@ body.sidebar-collapsed #sidebar nav { display: none; }
 
 /* ─────────────────────────────── Utility ─────────────────────────────── */
 .text-muted { color: var(--gb-gray-400); }
+
+/* ─────────────────────────────── Flashes ────────────────────────────── */
+.flashes { margin: 1rem 0; }
+.flash { padding: 0.75rem 1rem; border-radius: .5rem; font-weight: 500; }
+.flash.success {
+  background: #065f46;  /* Deep green */
+  color: #d1fae5;        /* Light mint text */
+}
+
+.flash.error {
+  background: #7f1d1d;  /* Deep red */
+  color: #fee2e2;        /* Light red-pink text */
+}
+
+.flash.warning {
+  background: #92400e;  /* Deep amber */
+  color: #fef3c7;        /* Pale yellow text */
+}
+
+.flash.info {
+  background: #1e40af;  /* Deep blue */
+  color: #dbeafe;        /* Light blue text */
+}
